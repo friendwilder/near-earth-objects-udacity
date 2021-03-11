@@ -29,12 +29,12 @@ def load_neos(neo_csv_path):
     :return: A collection of `NearEarthObject`s.
     """
     # TODO: Load NEO data from the given CSV file.
-    neos_collection = defaultdict()
+    neos_collection = []
 
     with open(neo_csv_path, 'r') as infile:
         reader = csv.reader(infile)
         next(reader)
-        neos_collection = {row[3]: { 'name': row[4], 'hazardous': row[7], 'diameter': row[15]} for row in reader}
+        [neos_collection.append(NearEarthObject(designation=row[3], name=row[4], hazardous=row[7], diameter=row[15])) for row in reader]
         # ([row[3], row[4], row[7], row[15]]) for row in reader] # TODO: substitute numbers by names
     return neos_collection
 
@@ -50,5 +50,5 @@ def load_approaches(cad_json_path):
 
     with open(cad_json_path, 'r') as infile:
         contents = json.load(infile)
-        cad_collection = [cad_collection.append([approach[0], approach[3], approach[4], approach[7]]) for approach in contents['data']]
+        [cad_collection.append(CloseApproach(designation=approach[0], time=approach[3], distance=approach[4], velocity=approach[7])) for approach in contents['data']]
     return cad_collection
